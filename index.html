@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -43,12 +44,13 @@
       grid-template-rows: 1fr auto;
       gap: 16px;
       padding: 16px;
+	  Background:#1f2338
     }
 
     /* SIDEBAR KIRI */
     .sidebar {
       grid-row: 1 / span 2; /* full tinggi */
-      background: #ffffff;
+      background: #1f2338;
       border-radius: 8px;
       padding: 10px;
       display: flex;
@@ -135,7 +137,7 @@
 
     /* CONTENT KANAN */
     .content {
-      background: #ffffff;
+      background: #1f2338;
       
       padding: 10px;
 	   background-size: auto 100%;
@@ -157,7 +159,7 @@
     }
 	
 	.footer span{
-		  white-space:nowrap; color:yellow;min-width:300px;
+		  white-space:nowrap; color:yellow;padding-right:10px;
 		}
 
 		.footer marquee{
@@ -172,6 +174,7 @@
 
       .sidebar {
         grid-row: auto;
+		
       }
     }
 	.kas_title{
@@ -182,8 +185,68 @@
 	
 	
 
-	#datetime{font-size:0.8rem;color:#000;text-align:center;padding-bottom:10px}
-  </style>
+	#datetime{font-size:0.8rem;color:#fff;text-align:center;padding-bottom:10px}
+  
+/* ===== TAB JADWAL SHOLAT ===== */
+.prayer.tab {
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  border-bottom: none;
+  border-radius: 14px 0 0 14px;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+  position: relative;
+  overflow: hidden;
+}
+.prayer.tab::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: rgba(255,255,255,0.35);
+}
+.tab.fajr     { background: linear-gradient(135deg,#2563eb,#38bdf8); }
+.tab.sunrise  { background: linear-gradient(135deg,#f59e0b,#fde68a); }
+.tab.dhuhr    { background: linear-gradient(135deg,#16a34a,#4ade80); }
+.tab.asr      { background: linear-gradient(135deg,#0ea5e9,#22d3ee); }
+.tab.maghrib  { background: linear-gradient(135deg,#dc2626,#fb7185); }
+.tab.isha     { background: linear-gradient(135deg,#4c1d95,#7c3aed); }
+.prayer.tab .time {
+  color: #fff;
+  font-size: 18px;
+}
+
+
+/* ===== FULLSCREEN BUTTON ===== */
+#fullscreenBtn{
+  position:fixed;
+  top:12px;
+  right:12px;
+  z-index:9999;
+  background:#111827;
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:8px 12px;
+  font-size:18px;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,0,0,.4);
+}
+#fullscreenBtn:hover{
+  background:#2563eb;
+}
+
+/* ===== HIGHLIGHT SHOLAT AKTIF ===== */
+.prayer.tab.active{
+  outline:3px solid #fde047;
+  box-shadow:0 0 18px rgba(253,224,71,.9);
+  transform:scale(1.06);
+}
+
+</style>
 </head>
 <body>
 
@@ -195,34 +258,34 @@
 		
 	</div>
     <div>
-      <h3>🔆 Waktu Sholat 🔆</h3>
+      
 
-      <div class="prayer">
+      <div class="prayer tab fajr">
         <div class="prayer-left"><span class="icon">🌅</span>Subuh</div>
         <span class="time" id="s1">04:45</span>
       </div>
 
-	  <div class="prayer">
+	  <div class="prayer tab sunrise">
         <div class="prayer-left"><span class="icon">🌄</span>Terbit</div>
         <span class="time" id="s2">12:05</span>
       </div>
 	  
-      <div class="prayer">
+      <div class="prayer tab dhuhr">
         <div class="prayer-left"><span class="icon">☀️</span>Dzuhur</div>
         <span class="time" id="s3">12:05</span>
       </div>
 
-      <div class="prayer">
+      <div class="prayer tab asr">
         <div class="prayer-left"><span class="icon">🌤️</span>Ashar</div>
         <span class="time" id="s4">15:25</span>
       </div>
 
-      <div class="prayer">
+      <div class="prayer tab maghrib">
         <div class="prayer-left"><span class="icon">🌇</span>Maghrib</div>
         <span class="time" id="s5">18:10</span>
       </div>
 
-      <div class="prayer">
+      <div class="prayer tab isha">
         <div class="prayer-left"><span class="icon">🌙</span>Isya</div>
         <span class="time" id="s6">19:20</span>
       </div>
@@ -264,6 +327,9 @@
   </div>
 
 </div>
+
+
+<button id="fullscreenBtn" title="Fullscreen">⛶</button>
 
 </body>
 
@@ -891,7 +957,7 @@ function updateDateTime() {
   }).format(now);
 
   document.getElementById("datetime").innerHTML =
-    `${tanggalMasehi} <br/><b>${jam} WIB</b><br><span style="color:green;font-size:16px"><b>${hijri}</b></span>`;
+    `${tanggalMasehi} <br/><b>${jam} WIB</b><br><span style="color:yellow;font-size:16px"><b>${hijri}</b></span>`;
 	
   
 }
@@ -982,5 +1048,43 @@ setInterval(updateUnifiedIslamicBanner, 60000); // update tiap 1 menit sudah cuk
 
 
 
+
+
+<script>
+function highlightNextPrayer(times){
+  const now = new Date();
+  const mapping = [
+    {id:'s1', cls:'fajr'},
+    {id:'s2', cls:'sunrise'},
+    {id:'s3', cls:'dhuhr'},
+    {id:'s4', cls:'asr'},
+    {id:'s5', cls:'maghrib'},
+    {id:'s6', cls:'isha'},
+  ];
+
+  document.querySelectorAll('.prayer.tab').forEach(p=>p.classList.remove('active'));
+
+  for(const m of mapping){
+    const t = document.getElementById(m.id).innerText;
+    const [h, min] = t.split(':').map(Number);
+    const d = new Date();
+    d.setHours(h,min,0,0);
+    if(d > now){
+      const el = document.getElementById(m.id).closest('.prayer');
+      el.classList.add('active');
+      break;
+    }
+  }
+}
+
+/* FULLSCREEN */
+document.getElementById('fullscreenBtn').onclick = ()=>{
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen();
+  }else{
+    document.exitFullscreen();
+  }
+};
+</script>
 
 </html>
